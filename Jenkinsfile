@@ -103,7 +103,21 @@ pipeline {
                 }
             }
         }
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                    set -eu
+                    export PATH="/usr/local/bin:/opt/homebrew/bin:$PATH"
+                    export KUBECONFIG="$HOME/.kube/config"
 
+                    kubectl apply -f "k8s/${PROFILE_VERSION}.yaml"
+
+                    kubectl rollout status \
+                        "deployment/profile-${PROFILE_VERSION}" \
+                        --timeout=120s
+                '''
+            }
+        }
         stage('Archive Website') {
             steps {
                 archiveArtifacts(
