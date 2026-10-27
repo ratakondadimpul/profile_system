@@ -209,6 +209,120 @@
         outline-offset: var(--space-3xs);
       }
 
+      .edit-name-label {
+        display: block;
+        margin-bottom: var(--space-2xs);
+        color: var(--ink-3);
+        font-size: var(--step--1);
+        font-weight: 500;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+      }
+
+      .profile-input {
+        width: 100%;
+        min-height: 2.75rem;
+        border: var(--border);
+        border-radius: var(--radius);
+        padding: var(--space-xs) var(--space-s);
+        background: var(--surface);
+        color: var(--ink);
+        font: inherit;
+      }
+
+      .profile-input:hover {
+        border-color: var(--ink-3);
+      }
+
+      .profile-input:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: var(--space-3xs);
+      }
+
+      .profile-input:disabled {
+        background: var(--base);
+        color: var(--ink-2);
+        cursor: not-allowed;
+      }
+
+      .profile-input[aria-invalid="true"] {
+        border-color: var(--accent);
+      }
+
+      .profile__name-input {
+        max-width: 100%;
+        font-family: var(--font-display);
+        font-size: var(--step-4);
+        line-height: 1.1;
+      }
+
+      .profile__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-s);
+        margin-top: var(--space-m);
+      }
+
+      .profile__button {
+        min-height: 2.75rem;
+        border: var(--border);
+        border-radius: var(--radius);
+        padding: var(--space-xs) var(--space-m);
+        background: transparent;
+        color: var(--ink);
+        font: 500 var(--step--1)/1.2 var(--font-text);
+        cursor: pointer;
+        transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+      }
+
+      .profile__button:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .profile__button:active {
+        background: var(--accent);
+        color: var(--surface);
+      }
+
+      .profile__button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: var(--space-3xs);
+      }
+
+      .profile__button:disabled,
+      .profile__button[aria-busy="true"] {
+        opacity: .55;
+        cursor: wait;
+      }
+
+      .profile__button--primary {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: var(--surface);
+      }
+
+      .profile__button--primary:hover,
+      .profile__button--primary:active {
+        background: var(--ink);
+        color: var(--surface);
+      }
+
+      .profile__status {
+        min-height: 1.5em;
+        margin: var(--space-s) 0 0;
+        color: var(--ink-2);
+        font-size: var(--step--1);
+      }
+
+      .profile__status[data-error="true"] {
+        color: var(--accent);
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
       .folio {
         padding-block: var(--space-m);
         border-top: var(--border);
@@ -248,6 +362,10 @@
           font-size: var(--step-4);
         }
 
+        .profile__name-input {
+          font-size: var(--step-2);
+        }
+
         .details {
           margin-top: var(--space-2xl);
         }
@@ -273,31 +391,47 @@
           </aside>
 
           <div class="profile__content">
-            <header>
-              <h1 class="profile__name" id="profile-name">Ratakonda Dimpul</h1>
-            </header>
+            <form id="profile-form">
+              <header>
+                <h1 class="profile__name" id="profile-name">Ratakonda Dimpul</h1>
+                <div id="name-editor" hidden>
+                  <label class="edit-name-label" for="name-input">Name</label>
+                  <input class="profile-input profile__name-input" id="name-input" name="name" autocomplete="name" required>
+                </div>
+              </header>
 
-            <section class="details" aria-labelledby="details-heading">
-              <h2 class="section-label" id="details-heading">Personal details</h2>
-              <dl class="detail-list">
-                <div class="detail">
-                  <dt class="detail__label">Email</dt>
-                  <dd class="detail__value"><a href="mailto:ratakondadimpul2628@gmail.com">ratakondadimpul2628@gmail.com</a></dd>
+              <section class="details" aria-labelledby="details-heading">
+                <h2 class="section-label" id="details-heading">Personal details</h2>
+                <dl class="detail-list">
+                  <div class="detail">
+                    <dt class="detail__label" id="email-label">Email</dt>
+                    <dd class="detail__value" data-display="email"><a href="mailto:ratakondadimpul2628@gmail.com">ratakondadimpul2628@gmail.com</a></dd>
+                    <dd class="detail__value" data-editor="email" hidden><input class="profile-input" id="email-input" name="email" type="email" inputmode="email" autocomplete="email" aria-labelledby="email-label" required hidden></dd>
+                  </div>
+                  <div class="detail">
+                    <dt class="detail__label" id="phone-label">Phone</dt>
+                    <dd class="detail__value" data-display="phone"><a href="tel:+918328570644">+91 8328570644</a></dd>
+                    <dd class="detail__value" data-editor="phone" hidden><input class="profile-input" id="phone-input" name="phone" type="tel" inputmode="tel" autocomplete="tel" aria-labelledby="phone-label" required hidden></dd>
+                  </div>
+                  <div class="detail">
+                    <dt class="detail__label" id="location-label">Location</dt>
+                    <dd class="detail__value" data-display="location">Vellore Institute of Technology</dd>
+                    <dd class="detail__value" data-editor="location" hidden><input class="profile-input" id="location-input" name="location" autocomplete="address-level2" aria-labelledby="location-label" required hidden></dd>
+                  </div>
+                  <div class="detail">
+                    <dt class="detail__label" id="joined-label">Joined</dt>
+                    <dd class="detail__value" data-display="joined"><time datetime="2026-07-26">July 26, 2026</time></dd>
+                    <dd class="detail__value" data-editor="joined" hidden><input class="profile-input" id="joined-input" name="joined" type="date" aria-labelledby="joined-label" required hidden></dd>
+                  </div>
+                </dl>
+                <div class="profile__actions">
+                  <button class="profile__button" id="edit-button" type="button">Edit details</button>
+                  <button class="profile__button profile__button--primary" id="save-button" type="submit" hidden>Save changes</button>
+                  <button class="profile__button" id="cancel-button" type="button" hidden>Cancel</button>
                 </div>
-                <div class="detail">
-                  <dt class="detail__label">Phone</dt>
-                  <dd class="detail__value"><a href="tel:+918328570644">+91 8328570644</a></dd>
-                </div>
-                <div class="detail">
-                  <dt class="detail__label">Location</dt>
-                  <dd class="detail__value">Vellore Institute of Technology</dd>
-                </div>
-                <div class="detail">
-                  <dt class="detail__label">Joined</dt>
-                  <dd class="detail__value"><time datetime="2026-07-26">July 26, 2026</time></dd>
-                </div>
-              </dl>
-            </section>
+                <p class="profile__status" id="profile-status" role="status" aria-live="polite"></p>
+              </section>
+            </form>
           </div>
         </article>
       </main>
@@ -307,5 +441,133 @@
         <p>RD</p>
       </footer>
     </div>
+    <script>
+      (() => {
+        const storageKey = "profile-system.user-details";
+        const form = document.querySelector("#profile-form");
+        const nameHeading = document.querySelector("#profile-name");
+        const nameInput = document.querySelector("#name-input");
+        const nameEditor = document.querySelector("#name-editor");
+        const initials = document.querySelector(".folio p:last-child");
+        const editButton = document.querySelector("#edit-button");
+        const saveButton = document.querySelector("#save-button");
+        const cancelButton = document.querySelector("#cancel-button");
+        const status = document.querySelector("#profile-status");
+        const fields = ["email", "phone", "location", "joined"];
+        const defaults = {
+          name: nameHeading.textContent.trim(),
+          email: document.querySelector('[data-display="email"] a').textContent.trim(),
+          phone: document.querySelector('[data-display="phone"] a').textContent.trim(),
+          location: document.querySelector('[data-display="location"]').textContent.trim(),
+          joined: document.querySelector('[data-display="joined"] time').dateTime
+        };
+        let profile = { ...defaults };
+
+        const setStatus = (message, isError = false) => {
+          status.textContent = message;
+          status.dataset.error = String(isError);
+        };
+
+        const displayDate = (value) => {
+          const [year, month, day] = value.split("-").map(Number);
+          return new Intl.DateTimeFormat("en", {
+            month: "long",
+            day: "numeric",
+            year: "numeric"
+          }).format(new Date(year, month - 1, day));
+        };
+
+        const updateDisplay = () => {
+          nameHeading.textContent = profile.name;
+          initials.textContent = profile.name.split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase();
+          const emailLink = document.querySelector('[data-display="email"] a');
+          emailLink.textContent = profile.email;
+          emailLink.href = `mailto:${profile.email}`;
+          const phoneLink = document.querySelector('[data-display="phone"] a');
+          phoneLink.textContent = profile.phone;
+          phoneLink.href = `tel:${profile.phone.replace(/[^\d+]/g, "")}`;
+          document.querySelector('[data-display="location"]').textContent = profile.location;
+          const joined = document.querySelector('[data-display="joined"] time');
+          joined.dateTime = profile.joined;
+          joined.textContent = displayDate(profile.joined);
+          document.title = `Profile — ${profile.name}`;
+        };
+
+        const setEditing = (isEditing) => {
+          nameHeading.hidden = isEditing;
+          nameEditor.hidden = !isEditing;
+          editButton.hidden = isEditing;
+          saveButton.hidden = !isEditing;
+          cancelButton.hidden = !isEditing;
+          for (const field of fields) {
+            document.querySelector(`[data-display="${field}"]`).hidden = isEditing;
+            const editor = document.querySelector(`[data-editor="${field}"]`);
+            const input = editor.querySelector("input");
+            editor.hidden = !isEditing;
+            input.hidden = !isEditing;
+          }
+          if (isEditing) {
+            nameInput.value = profile.name;
+            for (const field of fields) {
+              document.querySelector(`#${field}-input`).value = profile[field];
+            }
+          }
+        };
+
+        try {
+          const saved = localStorage.getItem(storageKey);
+          if (saved !== null) {
+            const parsed = JSON.parse(saved);
+            if (typeof parsed !== "object" || parsed === null ||
+                ["name", ...fields].some(field => typeof parsed[field] !== "string" || !parsed[field].trim())) {
+              throw new Error("Saved profile details are incomplete.");
+            }
+            profile = Object.fromEntries(["name", ...fields].map(field => [field, parsed[field]]));
+            updateDisplay();
+          }
+        } catch {
+          setStatus("Saved details couldn't be loaded. Your current details are shown; edit and save to replace them.", true);
+        }
+
+        editButton.addEventListener("click", () => {
+          setEditing(true);
+          setStatus("Changes are saved only in this browser.");
+          nameInput.focus();
+        });
+
+        cancelButton.addEventListener("click", () => {
+          form.reset();
+          setEditing(false);
+          setStatus("Changes discarded.");
+          editButton.focus();
+        });
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          if (!form.reportValidity()) return;
+
+          const nextProfile = Object.fromEntries(
+            ["name", ...fields].map(field => [field, document.querySelector(`#${field}-input`).value.trim()])
+          );
+          if (Object.values(nextProfile).some(value => !value)) {
+            setStatus("Complete every field before saving.", true);
+            return;
+          }
+
+          try {
+            localStorage.setItem(storageKey, JSON.stringify(nextProfile));
+          } catch {
+            setStatus("Your changes couldn't be saved in this browser. Keep editing and try again.", true);
+            return;
+          }
+
+          profile = nextProfile;
+          updateDisplay();
+          setEditing(false);
+          setStatus("Profile details saved in this browser.");
+          editButton.focus();
+        });
+      })();
+    </script>
   </body>
 </html>
