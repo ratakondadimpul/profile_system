@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profile-v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: profile-v1
+  template:
+    metadata:
+      labels:
+        app: profile-v1
+    spec:
+      containers:
+        - name: profile
+          image: dimpulratakonda/profile-system:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: profile-v1-service
+spec:
+  type: ClusterIP
+  selector:
+    app: profile-v1
+  ports:
+    - port: 80
+      targetPort: 80
