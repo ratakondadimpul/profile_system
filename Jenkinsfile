@@ -11,12 +11,37 @@ pipeline {
         ))
     }
 
+    parameters {
+        choice(
+            name: 'PROFILE_VERSION',
+            choices: ['v1', 'v2', 'v3'],
+            description: 'Select the profile website version to build and publish'
+        )
+    }
+
     environment {
         DOCKER_IMAGE = 'dimpulratakonda/profile-system'
-        IMAGE_TAG = 'v1'
     }
 
     stages {
+        stage('Checkout Selected Version') {
+            steps {
+                script {
+                    def branchName = params.PROFILE_VERSION == 'v1'
+                        ? 'main'
+                        : params.PROFILE_VERSION
+
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: "*/${branchName}"]],
+                        userRemoteConfigs: [[
+                            url: 'https://github.com/ratakondadimpul/profile_system.git'
+                        ]]
+                    ])
+                }
+            }
+        }
+
         stage('Validate Files') {
             steps {
                 sh '''
@@ -48,7 +73,8 @@ pipeline {
                 sh '''
                     set -eu
                     export PATH="/usr/local/bin:$PATH"
-                    docker build -t "$DOCKER_IMAGE:$IMAGE_TAG" .
+                    docker build \
+                      -t "$DOCKER_IMAGE:$PROFILE_VERSION" .
                 '''
             }
         }
@@ -67,11 +93,11 @@ pipeline {
                         export PATH="/usr/local/bin:$PATH"
 
                         echo "$DOCKER_PASSWORD" |
-                            docker login \
-                                --username "$DOCKER_USERNAME" \
-                                --password-stdin
+                          docker login \
+                            --username "$DOCKER_USERNAME" \
+                            --password-stdin
 
-                        docker push "$DOCKER_IMAGE:$IMAGE_TAG"
+                        docker push "$DOCKER_IMAGE:$PROFILE_VERSION"
                         docker logout
                     '''
                 }
@@ -90,7 +116,7 @@ pipeline {
 
     post {
         success {
-            echo 'SUCCESS: Docker image published to Docker Hub.'
+            echo "SUCCESS: Published ${DOCKER_IMAGE}:${PROFILE_VERSION}"
         }
         failure {
             echo 'FAILURE: Check Console Output.'
